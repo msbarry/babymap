@@ -104,7 +104,7 @@ function hashchange() {
     const year = +window.location.hash.substr(2, 4);
     onStateChange(
       year >= yearRange[0] && year <= yearRange[1] ? year : yearRange[1],
-      gender === 'F' ? 'F' : 'M',
+      gender === 'M' ? 'M' : 'F',
       true
     );
   }
