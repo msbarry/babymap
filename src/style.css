@@ -197,3 +197,15 @@ a {
     fill: #888;
   }
 }
+
+.addthis_toolbox {
+  float: right;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.section-share {
+  margin-top: 10px;
+}
