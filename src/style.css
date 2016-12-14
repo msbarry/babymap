@@ -171,6 +171,30 @@ a {
     stroke: black;
     stroke-opacity: 0.4;
   }
+  .tapcontainer {
+    .left, .right {
+      opacity: 0;
+      cursor: pointer;
+      user-select: none;
+      touch-action: manipulation;
+    }
+    circle {
+      fill: #eee;
+      transition: fill 100ms ease;
+    }
+    path {
+      stroke: white;
+      stroke-width: 2px;
+      fill: none;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+    }
+    &:active {
+      circle {
+        fill: #ddd;
+      }
+    }
+  }
 }
 
 #slider {

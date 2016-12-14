@@ -6,6 +6,7 @@ import { geoAlbersUsa, geoPath } from 'd3-geo';
 import { feature, mesh } from 'topojson-client';
 import 'd3-transition';
 import { drag as d3Drag } from 'd3-drag';
+import { line } from 'd3-shape';
 
 import scale from './scale';
 import coords from '../data/state-centroids.json';
@@ -13,6 +14,8 @@ import us from '../data/us.json';
 
 export default function makeMap({
   element,
+  previousYear = () => {},
+  nextYear = () => {},
   width: outerWidth = 800
 }) {
   const margin = {
@@ -57,6 +60,44 @@ export default function makeMap({
   const container = outerSvg
     .append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
+
+  const sidenavwidth = 0.25;
+  const containers = outerSvg.selectAll('.tapcontainer')
+      .data(['left', 'right'])
+      .enter()
+    .append('g')
+      .attr('class', 'tapcontainer')
+      .on('touchstart', () => {});
+
+  const navIndicators = containers.append('g')
+    .attr('transform', (side) => {
+      if (side === 'left') {
+        return `translate(20,${outerHeight * 0.68})`;
+      }
+      return `translate(${outerWidth - 20},${outerHeight * 0.68})`;
+    });
+  navIndicators.append('circle').attr('r', 10);
+
+  navIndicators.append('path')
+    .attr('d', line()([
+      [-1.5, -4],
+      [2.5, 0],
+      [-1.5, 4]
+    ])).attr('transform', side => `rotate(${side === 'left' ? 180 : 0})`);
+
+  containers.append('rect')
+      .attr('class', side => side)
+      .attr('x', side => (side === 'left' ? 0 : outerWidth * (1 - sidenavwidth)))
+      .attr('y', 0)
+      .attr('width', outerWidth * sidenavwidth)
+      .attr('height', outerHeight * 0.9)
+      .on('click', (side) => {
+        if (side === 'left') {
+          previousYear();
+        } else {
+          nextYear();
+        }
+      });
 
   const states = feature(us, us.objects.states).features;
 

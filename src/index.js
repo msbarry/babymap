@@ -46,7 +46,9 @@ function render() {
   if (width !== lastWidth) {
     map = makeMap({
       element: '#map',
-      width: widthScale(width)
+      width: widthScale(width),
+      nextYear,
+      previousYear
     });
     if (lastYear && lastGender) {
       map.setData(data[lastYear][lastGender]);
@@ -110,6 +112,16 @@ function hashchange() {
   }
   goingTo = false;
 }
+function nextYear() {
+  slider.stop(true);
+  onYearChange(lastYear + 1 > yearRange[1] ? yearRange[0] : lastYear + 1);
+  persist();
+}
+function previousYear() {
+  slider.stop(true);
+  onYearChange(lastYear - 1 < yearRange[0] ? yearRange[1] : lastYear - 1);
+  persist();
+}
 
 hashchange();
 persist();
@@ -123,13 +135,9 @@ select(window)
   .on('orientationchange.watch', render)
   .on('keydown', () => {
     if (event.key === 'ArrowLeft' || event.which === 37) {
-      slider.stop(true);
-      onYearChange(lastYear - 1 < yearRange[0] ? yearRange[1] : lastYear - 1);
-      persist();
+      previousYear();
     } else if (event.key === 'ArrowRight' || event.which === 39) {
-      slider.stop(true);
-      onYearChange(lastYear + 1 > yearRange[1] ? yearRange[0] : lastYear + 1);
-      persist();
+      nextYear();
     } else if (event.key === 'ArrowUp' || event.key === 'ArrowDown' || event.which === 38 || event.which === 40) {
       slider.stop(true);
       onGenderChange(lastGender === 'M' ? 'F' : 'M');
